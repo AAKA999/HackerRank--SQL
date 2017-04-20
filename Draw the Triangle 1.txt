@@ -1,0 +1,7 @@
+--MS SQL SERVER
+DECLARE @c INT = 20
+WHILE (@c > 0) 
+BEGIN
+   PRINT REPLICATE('* ', @c) 
+   SET @c = @c - 1
+END
