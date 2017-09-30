@@ -1,0 +1,31 @@
+--MS SQL SERVER
+SELECT H.HACKER_ID, NAME, COUNT(CHALLENGE_ID) COUNT
+FROM HACKERS H
+JOIN CHALLENGES C
+ON H.HACKER_ID = C.HACKER_ID
+GROUP BY H.HACKER_ID, NAME
+HAVING COUNT(CHALLENGE_ID) = (
+                                SELECT MAX(A.COUNT)
+                                FROM (
+                                        SELECT H.HACKER_ID, COUNT(C.CHALLENGE_ID) COUNT
+                                        FROM HACKERS H
+                                        JOIN CHALLENGES C
+                                        ON H.HACKER_ID = C.HACKER_ID
+                                        GROUP BY H.HACKER_ID
+                                     ) A
+                             )
+OR COUNT(CHALLENGE_ID) IN (
+                                SELECT DISTINCT B.COUNT
+                                FROM (
+                                        SELECT H.HACKER_ID, COUNT(C.CHALLENGE_ID) COUNT
+                                        FROM HACKERS H
+                                        JOIN CHALLENGES C
+                                        ON H.HACKER_ID = C.HACKER_ID
+                                        GROUP BY H.HACKER_ID
+                                        
+                                     ) B
+                                GROUP BY B.COUNT
+                                HAVING COUNT(B.COUNT)=1
+                             )
+ORDER BY COUNT(CHALLENGE_ID) DESC, H.HACKER_ID
+
